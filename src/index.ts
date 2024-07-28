@@ -4,6 +4,11 @@ type Init<T> = T | (() => T);
 type Listener = () => void;
 type Subscribe = (listener: Listener) => () => void;
 
+/**
+ * A hook to create a global state that can be used across components.
+ * @param init The initial value of the state. It can be a value or a function that returns a value.
+ * @returns A stateful value, and a function to update it.
+ */
 export default function createGlobalState<T>(init: Init<T>) {
   let listeners: Listener[] = [];
   let val = typeof init === "function" ? (init as () => T)() : init;
@@ -25,20 +30,22 @@ export default function createGlobalState<T>(init: Init<T>) {
     };
   };
 
+  // This is the hook that will be used in components to get the state.
   function useStore() {
     return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   }
 
-  return [
-    useStore,
-    (act: SetStateAction<T>) => {
-      const newVal = getValue(act, val);
-      if (newVal !== val) {
-        val = newVal;
-        emitChange();
-      }
-    },
-  ] as const;
+  // This is the function that will be used in components to update the state.
+  // It's similar to the useState setter function.
+  function setStore(act: SetStateAction<T>) {
+    // update val with the new value
+    val = getValue(act, val);
+
+    // notify all listeners
+    emitChange();
+  }
+
+  return [useStore, setStore] as const;
 }
 
 function getValue<T>(set: SetStateAction<T>, val: T) {
