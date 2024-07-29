@@ -1,6 +1,6 @@
 {
   "name": "create-global-state",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "type": "module",
   "main": "lib/index.js",
   "repository": {
