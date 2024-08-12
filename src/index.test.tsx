@@ -1,9 +1,9 @@
 import { it, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
-import { render, screen } from "@testing-library/react";
-import createGlobalState from "./index";
+import { cleanup, render, screen } from "@testing-library/react";
+import createGlobalState, { createLocalStorage } from "./index";
 
-it("basic", async () => {
+it("createGlobalState", async () => {
   const [useVal, setVal] = createGlobalState(false);
 
   function A() {
@@ -25,4 +25,34 @@ it("basic", async () => {
   await userEvent.click(screen.getByText("Click"));
 
   expect(screen.getByText("OK")).not.toBeNull();
+});
+
+it("createLocalStorageState", async () => {
+  localStorage.setItem("key", JSON.stringify("01"));
+
+  const [useVal, setVal] = createLocalStorage("key", "02");
+
+  function A() {
+    return <div>{useVal()}</div>;
+  }
+
+  render(
+    <>
+      <A />
+    </>
+  );
+
+  expect(screen.getByText("01")).not.toBeNull();
+
+  cleanup();
+
+  setVal("03");
+
+  render(
+    <>
+      <A />
+    </>
+  );
+
+  expect(screen.getByText("03")).not.toBeNull();
 });

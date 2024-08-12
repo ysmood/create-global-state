@@ -14,3 +14,4 @@ dist-ssr
 *.local
 test-results/
 .vite-playwright
+__screenshots__/
