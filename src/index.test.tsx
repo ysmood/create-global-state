@@ -3,6 +3,7 @@ import { userEvent } from "@vitest/browser/context";
 import { cleanup, render, screen } from "@testing-library/react";
 import createGlobalState from "./index";
 import createLocalStorage from "./local-storage";
+import { renderToString } from "react-dom/server";
 
 it("createGlobalState", async () => {
   const [useVal, setVal] = createGlobalState(false);
@@ -80,4 +81,16 @@ it("createLocalStorageState", async () => {
   );
 
   expect(screen.getByText("03")).not.toBeNull();
+});
+
+it("server component", async () => {
+  const [useVal] = createGlobalState(1);
+
+  function A() {
+    return <>{useVal()}</>;
+  }
+
+  const html = renderToString(<A />);
+
+  expect(html).toContain("1");
 });
