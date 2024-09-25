@@ -18,6 +18,10 @@
     ".": {
       "import": "./lib/index.js",
       "require": "./lib/index.js"
+    },
+    "./immer": {
+      "import": "./lib/immer/index.js",
+      "require": "./lib/immer/index.js"
     }
   },
   "files": [
