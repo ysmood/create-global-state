@@ -4,7 +4,7 @@ import create from "create-global-state/immer";
 
 // Define the monolith store for the entire web app.
 // It contains a list of counters and a title string.
-const [useStore, setStore] = create({
+export const [useStore, setStore] = create({
   title: "Monolith Store",
   counters: [
     {
@@ -17,8 +17,6 @@ const [useStore, setStore] = create({
     },
   ],
 });
-
-export { useStore, setStore };
 
 export function useTitle() {
   return useStore((s) => s.title);

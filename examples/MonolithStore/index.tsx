@@ -1,5 +1,5 @@
 import { useTitle } from "./store";
-import { increase, useCounter } from "./store/counter";
+import { increase, useCounter, useTotalCount } from "./store/counter";
 
 // Define the app component.
 export default function MonolithStore() {
@@ -8,6 +8,7 @@ export default function MonolithStore() {
       <h3>{useTitle()}</h3>
       <Counter index={0} />
       <Counter index={1} />
+      <TotalCount />
     </div>
   );
 }
@@ -21,4 +22,8 @@ function Counter({ index }: { index: number }) {
       {c.name}: {c.count}
     </button>
   );
+}
+
+function TotalCount() {
+  return <h3>Total counts: {useTotalCount()}</h3>;
 }
