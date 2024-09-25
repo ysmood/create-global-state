@@ -1,4 +1,4 @@
-import create, { Init } from "../";
+import create, { Init } from "..";
 import { produce } from "immer";
 
 /**
