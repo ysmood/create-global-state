@@ -1,7 +1,8 @@
 import { it, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { cleanup, render, screen } from "@testing-library/react";
-import createGlobalState, { createLocalStorage } from "./index";
+import createGlobalState from "./index";
+import createLocalStorage from "./local-storage";
 
 it("createGlobalState", async () => {
   const [useVal, setVal] = createGlobalState(false);
@@ -70,7 +71,7 @@ it("createLocalStorageState", async () => {
 
   cleanup();
 
-  setVal("03");
+  setVal(() => "03");
 
   render(
     <>

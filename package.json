@@ -13,7 +13,8 @@
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js",
-    "./lib/immer": "./lib/immer/index.js"
+    "./lib/immer": "./lib/immer.js",
+    "./lib/local-storage": "./lib/local-storage.js"
   },
   "files": [
     "lib"

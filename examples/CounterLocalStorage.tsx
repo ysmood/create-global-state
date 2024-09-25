@@ -1,6 +1,6 @@
-import { createLocalStorage } from "create-global-state";
+import create from "create-global-state/lib/local-storage";
 
-const [useCount, setCount] = createLocalStorage("counter", 0);
+const [useCount, setCount] = create("counter", 0);
 
 export default function CounterLocalStorage() {
   return (

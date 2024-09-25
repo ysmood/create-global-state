@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "paths": {
       "create-global-state": ["./src"],
-      "create-global-state/lib/immer": ["./src/immer"]
+      "create-global-state/lib/*": ["./src/*"]
     },
 
     /* Bundler mode */

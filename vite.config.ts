@@ -11,9 +11,15 @@ export default defineConfig({
   root: "examples",
   plugins: [react()],
   resolve: {
-    alias: {
-      "create-global-state/lib/immer": path.resolve(__dirname, "src/immer"),
-      "create-global-state": path.resolve(__dirname, "src"),
-    },
+    alias: [
+      {
+        find: /^create-global-state$/,
+        replacement: path.resolve(__dirname, "src"),
+      },
+      {
+        find: /^create-global-state\/lib\/(.+)$/,
+        replacement: path.resolve(__dirname, "src/$1"),
+      },
+    ],
   },
 });
