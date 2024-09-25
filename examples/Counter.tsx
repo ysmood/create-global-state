@@ -1,10 +1,11 @@
-import createGlobalState from "create-global-state";
+import create from "create-global-state";
 
-const [useCount, setCount] = createGlobalState(0);
+const [useCount, setCount] = create(0);
 
 export default function Counter() {
   return (
     <>
+      <h3>Basic counter example</h3>
       <Button />
       <Display />
     </>

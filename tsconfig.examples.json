@@ -8,7 +8,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "paths": {
-      "create-global-state": ["./src/index.ts"]
+      "create-global-state/*": ["./src/*"]
     },
 
     /* Bundler mode */

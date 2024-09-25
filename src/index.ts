@@ -1,21 +1,26 @@
 import { SetStateAction, useSyncExternalStore } from "react";
 
-type Init<T> = T | (() => T);
 type Listener = () => void;
 type Subscribe = (listener: Listener) => () => void;
+type Selector<T, P> = (val: T) => P;
+
+type UseStore<T> = {
+  // Return the whole state
+  (): T;
+  // Return a specific part of the state by using a selector
+  <P>(selector: Selector<T, P>): P;
+};
+
+export type Init<T> = T | (() => T);
 
 /**
  * A hook to create a global state that can be used across components.
  * @param init The initial value of the state. It can be a value or a function that returns a value.
- * @returns A hook to use the value, and a function to update it.
+ * @returns A hook to use the value, and a function to update it. The hook can also take a selector to get a specific part of the state.
  */
 export default function createGlobalState<T>(init: Init<T>) {
   let listeners: Listener[] = [];
   let val = typeof init === "function" ? (init as () => T)() : init;
-
-  function getSnapshot() {
-    return val;
-  }
 
   function emitChange() {
     for (const listener of listeners) {
@@ -31,9 +36,17 @@ export default function createGlobalState<T>(init: Init<T>) {
   };
 
   // This is the hook that will be used in components to get the state.
-  function useStore() {
+  const useStore: UseStore<T> = function <P>(selector?: Selector<T, P>) {
+    function getSnapshot() {
+      if (selector === undefined) {
+        return val;
+      }
+
+      return selector(val);
+    }
+
     return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
-  }
+  };
 
   // This is the function that will be used in components to update the state.
   // It's similar to the useState setter function.

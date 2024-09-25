@@ -27,6 +27,30 @@ it("createGlobalState", async () => {
   expect(screen.getByText("OK")).not.toBeNull();
 });
 
+it("selector", async () => {
+  const [useVal, setVal] = createGlobalState({ val: false });
+
+  function A() {
+    return <button onClick={() => setVal({ val: true })}>Click</button>;
+  }
+
+  function B() {
+    const val = useVal((s) => s.val);
+    return <div>{val ? "OK" : ""}</div>;
+  }
+
+  render(
+    <>
+      <A />
+      <B />
+    </>
+  );
+
+  await userEvent.click(screen.getByText("Click"));
+
+  expect(screen.getByText("OK")).not.toBeNull();
+});
+
 it("createLocalStorageState", async () => {
   localStorage.setItem("key", JSON.stringify("01"));
 

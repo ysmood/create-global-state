@@ -2,6 +2,14 @@
   "name": "create-global-state",
   "version": "0.0.9",
   "type": "module",
+  "scripts": {
+    "start": "vite",
+    "test": "vitest run && playwright test",
+    "build": "tsc -b && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "prepublishOnly": "tsc -b"
+  },
   "main": "lib/index.js",
   "repository": {
     "url": "https://github.com/ysmood/create-global-state"
@@ -15,16 +23,9 @@
   "files": [
     "lib"
   ],
-  "scripts": {
-    "start": "vite",
-    "test": "vitest run && playwright test",
-    "build": "tsc -b && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "prepublishOnly": "tsc -b"
-  },
-  "dependencies": {
-    "react": "^18.3.1"
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "immer": ">=9.0.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.3",
