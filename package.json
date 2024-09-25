@@ -5,24 +5,15 @@
   "scripts": {
     "start": "vite",
     "test": "vitest run && playwright test",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b -f && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepublishOnly": "tsc -b"
+    "prepublishOnly": "tsc -b -f"
   },
-  "main": "lib/index.js",
-  "repository": {
-    "url": "https://github.com/ysmood/create-global-state"
-  },
+  "main": "./lib/index.js",
   "exports": {
-    ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.js"
-    },
-    "./immer": {
-      "import": "./lib/immer/index.js",
-      "require": "./lib/immer/index.js"
-    }
+    ".": "./lib/index.js",
+    "./lib/immer": "./lib/immer/index.js"
   },
   "files": [
     "lib"
@@ -30,6 +21,9 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "immer": ">=9.0.6"
+  },
+  "repository": {
+    "url": "https://github.com/ysmood/create-global-state"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.3",

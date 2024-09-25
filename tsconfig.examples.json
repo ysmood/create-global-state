@@ -8,7 +8,8 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "paths": {
-      "create-global-state/*": ["./src/*"]
+      "create-global-state": ["./src"],
+      "create-global-state/lib/immer": ["./src/immer"]
     },
 
     /* Bundler mode */
