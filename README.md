@@ -2,9 +2,10 @@
 
 A elegant state management solution for React. Features:
 
+- **Non-opinionated**: Like useState, only one core function, others are built on top of it.
 - **Type safe**: The state is type safe and the return value is intuitive.
 - **Global**: The state is global, you can access it anywhere.
-- **Performant**: Supports selector to avoid unnecessary re-render.
+- **Scalable**: Supports selector to avoid unnecessary re-render.
 - **Tiny**: Less than [0.3KB](https://bundlephobia.com/package/create-global-state).
 
 Check the [counter example](./examples/Counter.tsx) for basic usage, or try it [online](https://codesandbox.io/p/sandbox/jtfywj).
