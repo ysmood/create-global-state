@@ -1,12 +1,13 @@
-import { it, expect } from "vitest";
+import { it, expect, describe } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { cleanup, render, screen } from "@testing-library/react";
-import createGlobalState from "./index";
-import createLocalStorage from "./local-storage";
+import create from "./index";
+import createStorage from "./persistent";
+import createImmer from "./immer";
 import { renderToString } from "react-dom/server";
 
-it("createGlobalState", async () => {
-  const [useVal, setVal] = createGlobalState(false);
+it("create", async () => {
+  const [useVal, setVal] = create(false);
 
   function A() {
     return <button onClick={() => setVal(true)}>Click</button>;
@@ -24,13 +25,38 @@ it("createGlobalState", async () => {
     </>
   );
 
+  expect(screen.queryByText("OK")).toBeNull();
   await userEvent.click(screen.getByText("Click"));
-
   expect(screen.getByText("OK")).not.toBeNull();
 });
 
+it("multiple listeners", async () => {
+  const [useVal, setVal] = create(false);
+
+  function A() {
+    return <button onClick={() => setVal(true)}>Click</button>;
+  }
+
+  function B() {
+    const val = useVal();
+    return <div>{val ? "OK" : ""}</div>;
+  }
+
+  render(
+    <>
+      <A />
+      <B />
+      <B />
+    </>
+  );
+
+  expect(screen.queryByText("OK")).toBeNull();
+  await userEvent.click(screen.getByText("Click"));
+  expect(screen.getAllByText("OK")).length(2);
+});
+
 it("selector", async () => {
-  const [useVal, setVal] = createGlobalState({ val: false });
+  const [useVal, setVal] = create({ val: false });
 
   function A() {
     return <button onClick={() => setVal({ val: true })}>Click</button>;
@@ -53,38 +79,68 @@ it("selector", async () => {
   expect(screen.getByText("OK")).not.toBeNull();
 });
 
-it("createLocalStorageState", async () => {
-  localStorage.setItem("key", JSON.stringify("01"));
-
-  const [useVal, setVal] = createLocalStorage("key", "02");
+it("immer", async () => {
+  const [useVal, setVal] = createImmer(false);
 
   function A() {
-    return <div>{useVal()}</div>;
+    return <button onClick={() => setVal(() => true)}>Click</button>;
+  }
+
+  function B() {
+    const val = useVal();
+    return <div>{val ? "OK" : ""}</div>;
   }
 
   render(
     <>
       <A />
+      <B />
     </>
   );
 
-  expect(screen.getByText("01")).not.toBeNull();
+  expect(screen.queryByText("OK")).toBeNull();
+  await userEvent.click(screen.getByText("Click"));
+  expect(screen.getByText("OK")).not.toBeNull();
+});
 
-  cleanup();
+describe("localStorage", () => {
+  it("basic", () => {
+    const [useVal, setVal] = createStorage("key", "01");
 
-  setVal(() => "03");
+    function A() {
+      return <div>{useVal()}</div>;
+    }
 
-  render(
-    <>
-      <A />
-    </>
-  );
+    render(<A />);
 
-  expect(screen.getByText("03")).not.toBeNull();
+    expect(screen.getByText("01")).not.toBeNull();
+
+    cleanup();
+
+    setVal(() => "02");
+
+    render(<A />);
+
+    expect(screen.getByText("02")).not.toBeNull();
+  });
+
+  it("use storage value as init value", () => {
+    localStorage.setItem("key", JSON.stringify("02"));
+
+    const [useVal] = createStorage("key", "01");
+
+    function A() {
+      return <>{useVal()}</>;
+    }
+
+    render(<A />);
+
+    expect(screen.getByText("02")).not.toBeNull();
+  });
 });
 
 it("server component", async () => {
-  const [useVal] = createGlobalState(1);
+  const [useVal] = create(1);
 
   function A() {
     return <>{useVal()}</>;

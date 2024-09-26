@@ -1,4 +1,4 @@
-import create from "create-global-state/lib/local-storage";
+import create from "create-global-state/lib/persistent";
 
 const [useCount, setCount] = create("counter", 0);
 

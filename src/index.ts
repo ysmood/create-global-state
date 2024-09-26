@@ -1,5 +1,4 @@
 import { SetStateAction, useSyncExternalStore } from "react";
-import { getValue, Init } from "./utils";
 
 type Listener = () => void;
 type Subscribe = (listener: Listener) => () => void;
@@ -14,23 +13,16 @@ type UseStore<T> = {
 
 /**
  * A hook to create a global state that can be used across components.
- * @param init The initial value of the state. It can be a value or a function that returns a value.
+ * @param val The initial value of the state.
  * @returns A hook to use the value, and a function to update it. The hook can also take a selector to get a specific part of the state.
  */
-export default function create<T>(init: Init<T>) {
-  let listeners: Listener[] = [];
-  let val = typeof init === "function" ? (init as () => T)() : init;
-
-  function emitChange() {
-    for (const listener of listeners) {
-      listener();
-    }
-  }
+export default function create<T>(val: T) {
+  const listeners = new Set<Listener>();
 
   const subscribe: Subscribe = function (listener) {
-    listeners = [...listeners, listener];
+    listeners.add(listener);
     return () => {
-      listeners = listeners.filter((l) => l !== listener);
+      listeners.delete(listener);
     };
   };
 
@@ -51,11 +43,17 @@ export default function create<T>(init: Init<T>) {
   // It's similar to the useState setter function.
   function setStore(act: SetStateAction<T>) {
     // update val with the new value
-    val = getValue(act, val);
+    val = applyAction(act, val);
 
     // notify all listeners
-    emitChange();
+    for (const listener of listeners) {
+      listener();
+    }
   }
 
   return [useStore, setStore] as const;
+}
+
+export function applyAction<T>(set: SetStateAction<T>, val: T) {
+  return set instanceof Function ? set(val) : set;
 }

@@ -11,6 +11,10 @@ export default defineConfig({
       provider: "playwright",
       headless: true,
     },
+    coverage: {
+      provider: "istanbul",
+      include: ["src/**/*.ts", "src/**/*.tsx"],
+    },
     setupFiles: ["./vitest.setup.ts"],
   },
 });

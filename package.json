@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "test": "vitest run && playwright test",
-    "build": "tsc -b -f && vite build",
+    "test": "tsc -b --clean && tsc -b && vitest run --coverage && playwright test",
+    "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "tsc -b -f"
@@ -14,14 +14,14 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/immer": "./lib/immer.js",
-    "./lib/local-storage": "./lib/local-storage.js"
+    "./lib/persistent": "./lib/persistent.js"
   },
   "files": [
     "lib"
   ],
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "immer": ">=9.0.6"
+    "immer": ">=9.0.6",
+    "react": ">=18.0.0"
   },
   "repository": {
     "url": "https://github.com/ysmood/create-global-state"
@@ -36,6 +36,7 @@
     "@typescript-eslint/parser": "^7.15.0",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/browser": "^2.0.4",
+    "@vitest/coverage-istanbul": "^2.1.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",

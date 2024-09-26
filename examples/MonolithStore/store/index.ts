@@ -18,6 +18,7 @@ export const [useStore, setStore] = create({
   ],
 });
 
+// Define a getter for the title.
 export function useTitle() {
   return useStore((s) => s.title);
 }

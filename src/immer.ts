@@ -1,11 +1,10 @@
 import createState from ".";
 import { produce } from "immer";
-import { Init } from "./utils";
 
 /**
  * It's similar to the base createGlobalState function, but it uses Immer to update the state immutably.
  */
-export default function create<T>(init: Init<T>) {
+export default function create<T>(init: T) {
   return wrap(createState(init));
 }
 
