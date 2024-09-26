@@ -17,8 +17,7 @@
     "./lib/persistent": "./lib/persistent.js"
   },
   "files": [
-    "./lib",
-    "./LICENSE"
+    "./lib"
   ],
   "peerDependencies": {
     "immer": ">=9.0.6",
