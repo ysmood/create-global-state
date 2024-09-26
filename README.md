@@ -32,9 +32,9 @@ export default function App() {
 
 ### Examples
 
-Check the [counter example](./examples/Counter.tsx) for basic usage, or try it [online](https://codesandbox.io/p/sandbox/jtfywj).
+Check the [Counter](./examples/Counter.tsx) for basic usage, or try it [online](https://codesandbox.io/p/sandbox/jtfywj).
 
-Check the [localStorage example](./examples/CounterLocalStorage.tsx) and [monolith store example](./examples/MonolithStore.tsx) for more advanced usage.
+Check the [CounterPersistent](./examples/CounterPersistent.tsx) and [MonolithStore](./examples/MonolithStore) for more advanced usage.
 
 ## FAQ
 

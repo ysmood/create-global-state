@@ -16,10 +16,10 @@ test("counter", async ({ page }) => {
   await expect(await display.textContent()).toBe("2");
 });
 
-test("counter-local-storage", async ({ page }) => {
+test("counter-persistent", async ({ page }) => {
   await page.goto("/");
 
-  const container = page.locator(".counter-local-storage");
+  const container = page.locator(".counter-persistent");
   const button = container.locator("button").first();
   const display = container.locator("h1").first();
 
