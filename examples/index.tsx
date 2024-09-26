@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Counter from "./Counter.tsx";
-import CounterLocalStorage from "./CounterPersistent.tsx";
+import CounterPersistent from "./CounterPersistent.tsx";
 import MonolithStore from "./MonolithStore";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </div>
     <hr />
     <div className="counter-persistent">
-      <CounterLocalStorage />
+      <CounterPersistent />
     </div>
     <hr />
     <div className="monolith-store">

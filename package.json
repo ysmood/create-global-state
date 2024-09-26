@@ -4,11 +4,11 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "test": "tsc -b --clean && tsc -b && vitest run --coverage && playwright test",
-    "build": "tsc -b && vite build",
+    "test": "npm run build && vitest run --coverage && playwright test",
+    "build": "tsc -b --clean && tsc -b",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepublishOnly": "tsc -b -f"
+    "prepublishOnly": "npm run build"
   },
   "main": "./lib/index.js",
   "exports": {

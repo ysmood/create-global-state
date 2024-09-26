@@ -2,7 +2,7 @@ import { SetStateAction, useSyncExternalStore } from "react";
 
 type Listener = () => void;
 type Subscribe = (listener: Listener) => () => void;
-type Selector<T, P> = (val: T) => P;
+type Selector<T, P> = (val: T, serverSide: boolean) => P;
 
 type UseStore<T> = {
   // Return the whole state
@@ -28,15 +28,11 @@ export default function create<T>(val: T) {
 
   // This is the hook that will be used in components to get the state.
   const useStore: UseStore<T> = function <P>(selector?: Selector<T, P>) {
-    function getSnapshot() {
-      if (selector === undefined) {
-        return val;
-      }
-
-      return selector(val);
-    }
-
-    return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+    return useSyncExternalStore<T | P>(
+      subscribe,
+      selector === undefined ? () => val : () => selector(val, false),
+      selector === undefined ? () => val : () => selector(val, true)
+    );
   };
 
   // This is the function that will be used in components to update the state.
