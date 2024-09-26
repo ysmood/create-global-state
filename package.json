@@ -1,6 +1,6 @@
 {
   "name": "create-global-state",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "scripts": {
     "start": "vite",
@@ -17,7 +17,8 @@
     "./lib/persistent": "./lib/persistent.js"
   },
   "files": [
-    "lib"
+    "./lib",
+    "./LICENSE"
   ],
   "peerDependencies": {
     "immer": ">=9.0.6",
