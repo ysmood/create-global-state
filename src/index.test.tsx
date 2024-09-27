@@ -1,7 +1,8 @@
-import { it, expect } from "vitest";
+import { it, expect, describe } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render, screen } from "@testing-library/react";
 import create from ".";
+import { renderToString } from "react-dom/server";
 
 it("create", async () => {
   const [useVal, setVal] = create(false);
@@ -74,4 +75,32 @@ it("selector", async () => {
   await userEvent.click(screen.getByText("Click"));
 
   expect(screen.getByText("OK")).not.toBeNull();
+});
+
+describe("server component", async () => {
+  it("basic", () => {
+    const [useVal] = create(1);
+
+    function A() {
+      return <>{useVal()}</>;
+    }
+
+    const html = renderToString(<A />);
+
+    expect(html).toContain("1");
+  });
+
+  it("render different value on server", () => {
+    const [useVal] = create("client");
+
+    function A() {
+      return <>{useVal((v, s) => (s ? "server" : v))}</>;
+    }
+
+    const html = renderToString(<A />);
+    expect(html).toContain("server");
+
+    render(<A />);
+    expect(screen.getByText("client")).not.toBeNull();
+  });
 });

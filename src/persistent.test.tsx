@@ -1,11 +1,9 @@
 import { it, expect, describe, beforeEach, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import create from ".";
 import createPersistentStorage, {
   createLocalStorage,
   defaultKey,
 } from "./persistent";
-import { renderToString } from "react-dom/server";
 
 describe("URLStorage", () => {
   beforeEach(() => {
@@ -114,33 +112,5 @@ describe("localStorage", () => {
     render(<A />);
 
     expect(screen.getByText("03")).not.toBeNull();
-  });
-});
-
-describe("server component", async () => {
-  it("basic", () => {
-    const [useVal] = create(1);
-
-    function A() {
-      return <>{useVal()}</>;
-    }
-
-    const html = renderToString(<A />);
-
-    expect(html).toContain("1");
-  });
-
-  it("render different value on server", () => {
-    const [useVal] = create("client");
-
-    function A() {
-      return <>{useVal((v, s) => (s ? "server" : v))}</>;
-    }
-
-    const html = renderToString(<A />);
-    expect(html).toContain("server");
-
-    render(<A />);
-    expect(screen.getByText("client")).not.toBeNull();
   });
 });
