@@ -39,7 +39,7 @@ export default function create<T>(val: T) {
   // It's similar to the useState setter function.
   function setStore(act: SetStateAction<T>) {
     // update val with the new value
-    val = applyAction(act, val);
+    val = act instanceof Function ? act(val) : act;
 
     // notify all listeners
     for (const listener of listeners) {
@@ -48,8 +48,4 @@ export default function create<T>(val: T) {
   }
 
   return [useStore, setStore] as const;
-}
-
-export function applyAction<T>(set: SetStateAction<T>, val: T) {
-  return set instanceof Function ? set(val) : set;
 }

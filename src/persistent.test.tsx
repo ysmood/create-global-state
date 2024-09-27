@@ -1,7 +1,10 @@
 import { it, expect, describe, beforeEach, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import create from ".";
-import createPersistentStorage, { createLocalStorage } from "./persistent";
+import createPersistentStorage, {
+  createLocalStorage,
+  defaultKey,
+} from "./persistent";
 import { renderToString } from "react-dom/server";
 
 describe("URLStorage", () => {
@@ -32,7 +35,7 @@ describe("URLStorage", () => {
   });
 
   it("use hash value as init value", ({ onTestFinished }) => {
-    location.hash = 'global-state="03"';
+    location.hash = `${defaultKey}="03"`;
 
     const [useVal, , close] = createPersistentStorage("01");
     onTestFinished(close);
@@ -92,7 +95,7 @@ describe("localStorage", () => {
 
     cleanup();
 
-    setVal("02");
+    setVal(() => "02");
 
     render(<A />);
 

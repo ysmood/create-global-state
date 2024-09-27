@@ -1,9 +1,8 @@
-import { SetStateAction } from "react";
-import createState, { applyAction } from ".";
+import createState from ".";
 import { type Producer } from "./immer";
 import { produce } from "immer";
 
-const defaultKey = "global-state";
+export const defaultKey = "global-state";
 
 /**
  * A hook to create a global state that is persisted in the url hash, it uses immer for state mutation.
@@ -57,8 +56,8 @@ export function createLocalStorage<T>(val: T, key = defaultKey) {
 
   const [useStore, setStoreBase] = createState(val);
 
-  const setStore = (act: SetStateAction<T>) => {
-    val = applyAction(act, val);
+  const setStore = (producer: Producer<T>) => {
+    val = produce(val, producer);
     storage.set(val);
     setStoreBase(val);
   };
@@ -66,7 +65,7 @@ export function createLocalStorage<T>(val: T, key = defaultKey) {
   return [useStore, setStore] as const;
 }
 
-export class LocalStorage<T> {
+class LocalStorage<T> {
   constructor(private key: string) {}
 
   get() {
@@ -79,7 +78,7 @@ export class LocalStorage<T> {
   }
 }
 
-export class URLStorage<T> {
+class URLStorage<T> {
   constructor(private key: string) {}
 
   get() {
