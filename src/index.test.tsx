@@ -77,6 +77,27 @@ it("selector", async () => {
   expect(screen.getByText("OK")).not.toBeNull();
 });
 
+it("selector with equal", async () => {
+  const [useVal, setVal] = create({ val: "test" });
+
+  let count = 0;
+
+  function A() {
+    count++;
+    const { val } = useVal(
+      (s) => s,
+      (a, b) => a.val === b.val
+    );
+    return <button onClick={() => setVal({ val: "test" })}>{val}</button>;
+  }
+
+  render(<A />);
+
+  await userEvent.click(screen.getByText("test"));
+
+  expect(count).toBe(1);
+});
+
 describe("server component", async () => {
   it("basic", () => {
     const [useVal] = create(1);

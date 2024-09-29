@@ -1,4 +1,4 @@
-import { SetStateAction, useSyncExternalStore } from "react";
+import { SetStateAction, useRef, useSyncExternalStore } from "react";
 
 type Listener = () => void;
 type Subscribe = (listener: Listener) => () => void;
@@ -7,8 +7,12 @@ type Selector<T, P> = (val: T, serverSide: boolean) => P;
 type UseStore<T> = {
   // Return the whole state
   (): T;
+
   // Return a specific part of the state by using a selector
   <P>(selector: Selector<T, P>): P;
+
+  // If equal returns true, return the previous selected value, otherwise return the new selected value
+  <P>(selector: Selector<T, P>, equal: (a: P, b: P) => boolean): P;
 };
 
 /**
@@ -27,12 +31,28 @@ export default function create<T>(val: T) {
   };
 
   // This is the hook that will be used in components to get the state.
-  const useStore: UseStore<T> = function <P>(selector?: Selector<T, P>) {
-    return useSyncExternalStore<T | P>(
-      subscribe,
-      selector === undefined ? () => val : () => selector(val, false),
-      selector === undefined ? () => val : () => selector(val, true)
-    );
+  const useStore: UseStore<T> = function <P>(
+    selector?: Selector<T, P>,
+    equal?: (a: P, b: P) => boolean
+  ) {
+    const cache = useRef<P>();
+    let get: (serverSide: boolean) => () => P | T = () => () => val;
+
+    if (selector !== undefined) {
+      if (equal !== undefined) {
+        get = (serverSide: boolean) => () => {
+          const selected = selector(val, serverSide);
+          return (cache.current =
+            cache.current !== undefined && equal(selected, cache.current)
+              ? cache.current
+              : selected);
+        };
+      } else {
+        get = (serverSide: boolean) => () => selector(val, serverSide);
+      }
+    }
+
+    return useSyncExternalStore<T | P>(subscribe, get(false), get(true));
   };
 
   // This is the function that will be used in components to update the state.
