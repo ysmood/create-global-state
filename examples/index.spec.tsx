@@ -49,3 +49,19 @@ test("monolith-store", async ({ page }) => {
   await expect(await btnY.textContent()).toContain("3");
   await expect(await total.textContent()).toContain("5");
 });
+
+test("todo-app", async ({ page }) => {
+  await page.goto("/");
+
+  const container = page.locator(".todo-app");
+  const input = container.locator("[placeholder='Input text here']");
+  const saveBtn = container.locator("[type=submit]");
+
+  await input.fill("Hello");
+
+  await saveBtn.click();
+
+  await expect(
+    await container.locator("[readonly]").getAttribute("value")
+  ).toContain("Hello");
+});
