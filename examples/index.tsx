@@ -1,27 +1,27 @@
 import "./index.css";
-import React from "react";
 import ReactDOM from "react-dom/client";
-import Counter from "./Counter.tsx";
-import CounterPersistent from "./CounterPersistent.tsx";
-import MonolithStore from "./MonolithStore";
-import TodoApp from "./TodoApp";
+import { Link, Switch, Router } from "wouter";
+import { ExampleRoute } from "./utils";
+
+const examples = ["Counter", "CounterPersistent", "MonolithStore", "TodoApp"];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <div className="counter">
-      <Counter />
-    </div>
-    <hr />
-    <div className="counter-persistent">
-      <CounterPersistent />
-    </div>
-    <hr />
-    <div className="monolith-store">
-      <MonolithStore />
-    </div>
-    <hr />
-    <div className="todo-app">
-      <TodoApp />
-    </div>
-  </React.StrictMode>
+  <>
+    {examples.map((name) => {
+      return (
+        <Link href={`/examples/${name}`} key={name} className={"mx-1"}>
+          {name}
+        </Link>
+      );
+    })}
+
+    <Switch>
+      <ExampleRoute path="/" name={examples[0]} />
+      <Router base="/examples">
+        {examples.map((n) => (
+          <ExampleRoute key={n} name={n} />
+        ))}
+      </Router>
+    </Switch>
+  </>
 );

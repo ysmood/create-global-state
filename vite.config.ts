@@ -5,4 +5,5 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   root: "examples",
   plugins: [react()],
+  optimizeDeps: { exclude: ["fsevents"] },
 });

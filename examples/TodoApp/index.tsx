@@ -1,8 +1,6 @@
-import { useEffect, useRef } from "react";
 import {
   useList,
   useTodo,
-  setTodoMode,
   delTodo,
   toggleTodo,
   updateTodo,
@@ -10,27 +8,40 @@ import {
   clearCompleted,
   filters,
   setFilter,
+  toggleAll,
+  useLeftCount,
+  useToggleAll,
 } from "./store";
 
 export default function TodoApp() {
-  const ids = useList();
   return (
     <div>
-      <h3>Todo App</h3>
-      <div>
+      <h3>Todo App ({useLeftCount()} todos left)</h3>
+      <div className="flex gap-1">
+        <ToggleAll />
         <Filter />
-        <button onClick={addTodo}>Add todo</button>
+        <button onClick={addTodo} title="Add new todo">
+          +
+        </button>
+        <button onClick={clearCompleted} title="Delete all completed todos">
+          ✂️
+        </button>
       </div>
 
-      {/* Render the todos */}
-      <div>
-        {ids.map((id) => {
-          return <TodoItem key={id} id={id} />;
-        })}
-      </div>
-
-      <button onClick={clearCompleted}>Clear completed</button>
+      <TodoList />
     </div>
+  );
+}
+
+// ToggleAll component to toggle all todos.
+function ToggleAll() {
+  return (
+    <input
+      type="checkbox"
+      checked={useToggleAll()}
+      onChange={toggleAll}
+      disabled={useList().length === 0}
+    />
   );
 }
 
@@ -45,52 +56,35 @@ function Filter() {
   );
 }
 
-// Todo item component to display a todo.
-function TodoItem({ id }: { id: number }) {
-  const { done, text, editing } = useTodo(id);
-
+function TodoList() {
   return (
-    <div>
-      <label>
-        <input type="checkbox" checked={done} onChange={() => toggleTodo(id)} />
-      </label>
-
-      {editing ? (
-        <TodoEditor id={id} text={text} />
-      ) : (
-        <>
-          <input value={text} readOnly style={{ borderColor: "transparent" }} />
-          <button onClick={() => setTodoMode(id, true)}>Edit</button>
-        </>
-      )}
-
-      <button onClick={() => delTodo(id)}>Delete</button>
-    </div>
+    <>
+      {useList().map((id) => {
+        return <TodoItem key={id} id={id} />;
+      })}
+    </>
   );
 }
 
-// Todo editor component to edit a todo.
-function TodoEditor({ id, text }: { id: number; text: string }) {
-  const ref = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    ref.current?.focus();
-  }, []);
+// Todo item component to display a todo.
+function TodoItem({ id }: { id: number }) {
+  const { done, text } = useTodo(id);
 
   return (
-    <form
-      style={{ display: "inline" }}
-      onSubmit={(e) => {
-        e.preventDefault();
-        setTodoMode(id, false);
-      }}
-    >
+    <div className="flex gap-1 my-1">
+      <input type="checkbox" checked={done} onChange={() => toggleTodo(id)} />
+
       <input
-        ref={ref}
         placeholder="Input text here"
         value={text}
         onChange={(e) => updateTodo(id, e.target.value)}
+        disabled={done}
+        autoFocus
       />
-      <input type="submit" value="Save" />
-    </form>
+
+      <button onClick={() => delTodo(id)} title="Delete current todo">
+        ✕
+      </button>
+    </div>
   );
 }

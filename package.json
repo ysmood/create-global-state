@@ -3,7 +3,7 @@
   "version": "0.3.6",
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "start": "vite --open",
     "test": "npm run build && vitest run --coverage && playwright test",
     "build": "tsc -b --clean && tsc -b",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -45,7 +45,8 @@
     "react-dom": "^18.3.1",
     "typescript": "^5.5.2",
     "vite": "^5.4.8",
-    "vitest": "^2.1.1"
+    "vitest": "^2.1.1",
+    "wouter": "^3.3.5"
   },
   "publishConfig": {
     "provenance": true

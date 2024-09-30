@@ -1,3 +1,21 @@
-button, input, select {
-	margin: 5px;
+:root {
+  --size-1: 4px;
+}
+
+.mx-1 {
+  margin-left: var(--size-1);
+  margin-right: var(--size-1);
+}
+
+.my-1 {
+  margin-top: var(--size-1);
+  margin-bottom: var(--size-1);
+}
+
+.flex {
+  display: flex;
+}
+
+.gap-1 {
+  gap: var(--size-1);
 }
