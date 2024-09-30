@@ -1,7 +1,7 @@
 import { it, expect, describe } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render, screen } from "@testing-library/react";
-import create from ".";
+import create, { useEqual } from ".";
 import { renderToString } from "react-dom/server";
 
 it("create", async () => {
@@ -84,9 +84,11 @@ it("selector with equal", async () => {
 
   function A() {
     count++;
-    const { val } = useVal(
-      (s) => s,
-      (a, b) => a.val === b.val
+    const [{ val }] = useVal(
+      useEqual(
+        (s) => [s],
+        ([a], [b]) => a.val === b.val
+      )
     );
     return <button onClick={() => setVal({ val: "test" })}>{val}</button>;
   }

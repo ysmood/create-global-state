@@ -22,6 +22,7 @@ export default function TodoApp() {
         <button onClick={addTodo}>Add todo</button>
       </div>
 
+      {/* Render the todos */}
       <div>
         {ids.map((id) => {
           return <TodoItem key={id} id={id} />;
@@ -33,6 +34,7 @@ export default function TodoApp() {
   );
 }
 
+// Filter component to filter the todos.
 function Filter() {
   return (
     <select onChange={(e) => setFilter(e.target.value)}>
@@ -43,6 +45,7 @@ function Filter() {
   );
 }
 
+// Todo item component to display a todo.
 function TodoItem({ id }: { id: number }) {
   const { done, text, editing } = useTodo(id);
 
@@ -66,6 +69,7 @@ function TodoItem({ id }: { id: number }) {
   );
 }
 
+// Todo editor component to edit a todo.
 function TodoEditor({ id, text }: { id: number; text: string }) {
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
