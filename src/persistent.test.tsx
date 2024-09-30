@@ -11,9 +11,8 @@ describe("URLStorage", () => {
     location.replace("#");
   });
 
-  it("basic", ({ onTestFinished }) => {
-    const [useVal, setVal, close] = createPersistentStorage("01");
-    onTestFinished(close);
+  it("basic", () => {
+    const [useVal, setVal] = createPersistentStorage("01");
 
     function A() {
       return <div>{useVal()}</div>;
@@ -32,11 +31,10 @@ describe("URLStorage", () => {
     expect(screen.getByText("02")).not.toBeNull();
   });
 
-  it("use hash value as init value", ({ onTestFinished }) => {
+  it("use hash value as init value", () => {
     location.hash = `${defaultKey}="03"`;
 
-    const [useVal, , close] = createPersistentStorage("01");
-    onTestFinished(close);
+    const [useVal] = createPersistentStorage("01");
 
     function A() {
       return <>{useVal()}</>;
@@ -47,9 +45,8 @@ describe("URLStorage", () => {
     expect(screen.getByText("03")).not.toBeNull();
   });
 
-  it("history should work", async ({ onTestFinished }) => {
-    const [useVal, setVal, close] = createPersistentStorage("01");
-    onTestFinished(close);
+  it("history should work", async () => {
+    const [useVal, setVal, setByStorage] = createPersistentStorage("01");
 
     function A() {
       return <div>{useVal()}</div>;
@@ -69,9 +66,27 @@ describe("URLStorage", () => {
 
     await vi.waitUntil(() => location.hash != hash);
 
+    setByStorage();
+
     render(<A />);
 
     expect(screen.getByText("01")).not.toBeNull();
+  });
+
+  it("setByStorage with hash", async () => {
+    const [useVal, , setByStorage] = createPersistentStorage("01");
+
+    location.hash = `${defaultKey}="03"`;
+
+    function A() {
+      return <div>{useVal()}</div>;
+    }
+
+    setByStorage();
+
+    render(<A />);
+
+    expect(screen.getByText("03")).not.toBeNull();
   });
 });
 
