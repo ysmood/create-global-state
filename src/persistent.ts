@@ -8,7 +8,7 @@ export const defaultKey = "global-state";
  * A hook to create a global state that is persisted in the url hash, it uses immer for state mutation.
  * @param key The key to use in the url hash.
  * @param init The initial value of the state.
- * @returns A hook to use the value, and a function to update it.
+ * @returns A hook to use the value, a function to update it, and a function to set the value by current url hash.
  */
 export default function createURLStorage<T>(init: T, key = defaultKey) {
   const storage = new URLStorage<T>(key);

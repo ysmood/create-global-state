@@ -37,8 +37,8 @@ export function useList() {
 }
 
 // Get the count of the left todos.
-export function useLeftCount() {
-  return useStore((s) => s.todos.filter(({ done }) => !done).length);
+export function useCount(done?: boolean) {
+  return useStore((s) => s.todos.filter(({ done: d }) => d == done).length);
 }
 
 // Get a todo by id.

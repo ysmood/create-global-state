@@ -9,21 +9,25 @@ import {
   filters,
   setFilter,
   toggleAll,
-  useLeftCount,
+  useCount,
   useToggleAll,
 } from "./store";
 
 export default function TodoApp() {
   return (
     <div>
-      <h3>Todo App ({useLeftCount()} todos left)</h3>
+      <h3>Todo App ({useCount(false)} todos left)</h3>
       <div className="flex gap-1">
         <ToggleAll />
         <Filter />
         <button onClick={addTodo} title="Add new todo">
           +
         </button>
-        <button onClick={clearCompleted} title="Delete all completed todos">
+        <button
+          onClick={clearCompleted}
+          disabled={useCount(true) === 0}
+          title="Delete all completed todos"
+        >
           ✂️
         </button>
       </div>
