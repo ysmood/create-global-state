@@ -1,4 +1,4 @@
-import { it, expect, describe, beforeEach, vi } from "vitest";
+import { it, expect, describe, beforeEach, vi, afterEach } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import createPersistentStorage, {
   createLocalStorage,
@@ -6,9 +6,14 @@ import createPersistentStorage, {
 } from "./persistent";
 
 describe("URLStorage", () => {
+  let originalHash: string;
+
   beforeEach(() => {
-    location.href = "/";
-    location.replace("#");
+    originalHash = location.hash;
+  });
+
+  afterEach(() => {
+    location.hash = originalHash;
   });
 
   it("basic", () => {
