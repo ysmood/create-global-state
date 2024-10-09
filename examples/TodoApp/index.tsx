@@ -33,7 +33,7 @@ export default function TodoApp() {
   );
 }
 
-// ToggleAll component to toggle all todos.
+// The component to toggle all todos.
 function ToggleAll() {
   return (
     <input
@@ -45,7 +45,7 @@ function ToggleAll() {
   );
 }
 
-// Filter component to filter the todos.
+// The component to filter the todos.
 function Filter() {
   return (
     <select onChange={(e) => setFilter(e.target.value)}>
@@ -56,6 +56,7 @@ function Filter() {
   );
 }
 
+// The component to display all filtered todos.
 function TodoList() {
   return (
     <>
@@ -66,7 +67,7 @@ function TodoList() {
   );
 }
 
-// Todo item component to display a todo.
+// The component to display a todo.
 function TodoItem({ id }: { id: number }) {
   const { done, text } = useTodo(id);
 

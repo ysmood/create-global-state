@@ -34,7 +34,7 @@ export default function App() {
 
 Check the [Counter](./examples/Counter.tsx) for basic usage, or try it [online](https://codesandbox.io/p/sandbox/jtfywj).
 
-Check the [CounterPersistent](./examples/CounterPersistent.tsx) and [MonolithStore](./examples/MonolithStore) for more advanced usage.
+Check the [CounterPersistent](./examples/CounterPersistent.tsx), [MonolithStore](./examples/MonolithStore), [TodoApp](./examples/TodoApp) for more advanced usage.
 
 ## FAQ
 
