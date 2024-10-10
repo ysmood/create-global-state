@@ -9,6 +9,7 @@ export default defineConfig({
       enabled: true,
       name: "chromium",
       provider: "playwright",
+      headless: true,
     },
     coverage: {
       provider: "istanbul",

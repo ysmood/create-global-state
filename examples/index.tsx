@@ -1,12 +1,12 @@
 import "./index.css";
 import ReactDOM from "react-dom/client";
-import { Link, Switch, Router } from "wouter";
-import { ExampleRoute } from "./utils";
+import { Link, Switch, Router, Route } from "wouter";
+import { lazy, StrictMode, Suspense } from "react";
 
 const examples = ["Counter", "CounterPersistent", "MonolithStore", "TodoApp"];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <>
+  <StrictMode>
     {examples.map((name) => {
       return (
         <Link href={`/examples/${name}`} key={name} className={"mx-1"}>
@@ -23,5 +23,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         ))}
       </Router>
     </Switch>
-  </>
+  </StrictMode>
 );
+
+export function ExampleRoute({ name, path }: { name: string; path?: string }) {
+  path = path || `/${name}`;
+  const Example = lazy(() => import(/* @vite-ignore */ `./${name}`));
+  return (
+    <Route path={path}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Example />
+      </Suspense>
+    </Route>
+  );
+}
