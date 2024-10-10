@@ -1,6 +1,12 @@
 import createState from ".";
 import { produce } from "immer";
 
+/**
+ * The producer function that is used to update the state immutably.
+ * @param draft The current draft state you will make changes on.
+ * @returns If you return a new state, the state will be updated with the new state.
+ * If you return nothing, the draft will be used to update the state.
+ */
 export type Producer<T> = (draft: T) => T | void;
 
 /**

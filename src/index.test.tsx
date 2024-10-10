@@ -5,7 +5,7 @@ import create, { useEqual } from ".";
 import { renderToString } from "react-dom/server";
 
 it("create", async () => {
-  const [useVal, setVal] = create(false);
+  const [useVal, setVal, getVal] = create(false);
 
   function A() {
     return <button onClick={() => setVal(true)}>Click</button>;
@@ -26,6 +26,7 @@ it("create", async () => {
   expect(screen.queryByText("OK")).toBeNull();
   await userEvent.click(screen.getByText("Click"));
   expect(screen.getByText("OK")).not.toBeNull();
+  expect(getVal()).toBe(true);
 });
 
 it("multiple listeners", async () => {

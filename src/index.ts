@@ -1,37 +1,43 @@
 import { SetStateAction, useRef, useSyncExternalStore } from "react";
 
-type Listener = () => void;
-type Subscribe = (listener: Listener) => () => void;
+export type Equal<P> = (a: P, b: P) => boolean;
 
-type Equal<P> = (a: P, b: P) => boolean;
-type Selector<T, P> = (val: T, serverSide: boolean) => P;
-type UseStore<T> = {
+export type Selector<T, P> = (val: T, serverSide: boolean) => P;
+
+/**
+ * A hook to use the state.
+ */
+export type UseStore<T> = {
+  /**
+   * @returns The current state.
+   */
   (): T;
+
+  /**
+   * @param selector A function to select a part of the state to return.
+   * @returns The selected part of the state.
+   */
   <P>(selector: Selector<T, P>): P;
 };
 
 /**
  * A hook to create a global state that can be used across components.
  * @param val The initial value of the state.
- * @returns A hook useStore to get the state, and a function setStore to update the state.
- * The hook can also take a selector to get a specific part of the state.
+ * @returns A React hook to use the state, a function to update the state, and a function to get the state.
+ * If you want a component to rerender when the state changes, you can use the hook.
  */
 export default function create<T>(val: T) {
+  type Listener = () => void;
+
   const listeners = new Set<Listener>();
 
-  const subscribe: Subscribe = function (listener) {
+  const subscribe = function (listener: Listener) {
     listeners.add(listener);
     return () => {
       listeners.delete(listener);
     };
   };
 
-  /**
-   * A hook to get a part of the state.
-   * @param selector The function to select a part of the state as the return value.
-   * By default it returns the whole state.
-   * @returns The selected part of the state.
-   */
   const useStore: UseStore<T> = <P>(
     selector: Selector<T, P> = (val: T) => val as unknown as P
   ) => {
@@ -39,9 +45,7 @@ export default function create<T>(val: T) {
     return useSyncExternalStore<T | P>(subscribe, get(false), get(true));
   };
 
-  // This is the function that will be used in components to update the state.
-  // It's similar to the useState setter function.
-  function setStore(act: SetStateAction<T>) {
+  const setStore = (act: SetStateAction<T>) => {
     // update val with the new value
     val = act instanceof Function ? act(val) : act;
 
@@ -49,9 +53,9 @@ export default function create<T>(val: T) {
     for (const listener of listeners) {
       listener();
     }
-  }
+  };
 
-  return [useStore, setStore] as const;
+  return [useStore, setStore, () => val] as const;
 }
 
 /**

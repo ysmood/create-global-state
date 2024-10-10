@@ -8,12 +8,13 @@ export const defaultKey = "global-state";
  * A hook to create a global state that is persisted in the url hash, it uses immer for state mutation.
  * @param key The key to use in the url hash.
  * @param init The initial value of the state.
- * @returns A hook to use the value, a function to update it, and a function to set the value by current url hash.
+ * @returns A hook to use the state, a function to update the state, a function to set the state by current url hash,
+ * and a function to get the state.
  */
 export default function createURLStorage<T>(init: T, key = defaultKey) {
   const storage = new URLStorage<T>(key);
   const getVal = () => storageGetter(storage, init);
-  const [useStore, setStoreBase] = createState(getVal());
+  const [useStore, setStoreBase, getStore] = createState(getVal());
 
   const setStore = (producer: Producer<T>, saveHistory: boolean = false) => {
     setStoreBase((val) => {
@@ -26,17 +27,20 @@ export default function createURLStorage<T>(init: T, key = defaultKey) {
 
   const setByStorage = () => setStoreBase(getVal);
 
-  return [useStore, setStore, setByStorage] as const;
+  return [useStore, setStore, setByStorage, getStore] as const;
 }
 
 /**
  * A function to create a global state that is persisted with the provided storage.
  * @param storage The storage to use.
  * @param init The initial value of the state.
+ * @returns A hook to use the state, a function to update the state, and a function to get the state.
  */
 export function createLocalStorage<T>(init: T, key = defaultKey) {
   const storage = new LocalStorage<T>(key);
-  const [useStore, setStoreBase] = createState(storageGetter(storage, init));
+  const [useStore, setStoreBase, getStore] = createState(
+    storageGetter(storage, init)
+  );
 
   const setStore = (producer: Producer<T>) => {
     setStoreBase((val) => {
@@ -46,7 +50,7 @@ export function createLocalStorage<T>(init: T, key = defaultKey) {
     });
   };
 
-  return [useStore, setStore] as const;
+  return [useStore, setStore, getStore] as const;
 }
 
 class LocalStorage<T> {

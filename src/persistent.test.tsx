@@ -17,7 +17,7 @@ describe("URLStorage", () => {
   });
 
   it("basic", () => {
-    const [useVal, setVal] = createPersistentStorage("01");
+    const [useVal, setVal, , getVal] = createPersistentStorage("01");
 
     function A() {
       return <div>{useVal()}</div>;
@@ -26,6 +26,7 @@ describe("URLStorage", () => {
     render(<A />);
 
     expect(screen.getByText("01")).not.toBeNull();
+    expect(getVal()).toBe("01");
 
     cleanup();
 
@@ -101,7 +102,7 @@ describe("localStorage", () => {
   });
 
   it("basic", () => {
-    const [useVal, setVal] = createLocalStorage("01");
+    const [useVal, setVal, getVal] = createLocalStorage("01");
 
     function A() {
       return <div>{useVal()}</div>;
@@ -110,6 +111,7 @@ describe("localStorage", () => {
     render(<A />);
 
     expect(screen.getByText("01")).not.toBeNull();
+    expect(getVal()).toBe("01");
 
     cleanup();
 
