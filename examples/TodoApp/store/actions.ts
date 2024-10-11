@@ -1,23 +1,25 @@
-import { getFilter, useFilter } from "./filter";
-import { filterTodos, initTodo, setTodos, useTodos } from ".";
+import { setStore, useStore } from ".";
+import { initTodo } from "./todos/types";
+import { filterTodos } from "./todos";
 
 // Add a new empty todo to the list.
 export function addTodo() {
-  setTodos((todos) => {
-    todos.unshift({ ...initTodo, id: Date.now() });
+  setStore((s) => {
+    s.todos.unshift({ ...initTodo, id: Date.now() });
   });
 }
 
 // Clear all completed todos.
 export function clearCompleted() {
-  setTodos((todos) => todos.filter(({ done }) => !done));
+  setStore((s) => {
+    s.todos = s.todos.filter(({ done }) => !done);
+  });
 }
 
 // Get the toggleAll state.
 export function useToggleAll() {
-  const filter = useFilter();
-  return useTodos((todos) => {
-    todos = filterTodos(todos, filter);
+  return useStore((s) => {
+    const todos = filterTodos(s, s.filter);
     if (todos.length === 0) {
       return false;
     }
@@ -27,8 +29,8 @@ export function useToggleAll() {
 
 // Toggle all the current filtered todos.
 export function toggleAll() {
-  setTodos((todos) => {
-    todos = filterTodos(todos, getFilter());
+  setStore((s) => {
+    const todos = filterTodos(s, s.filter);
     if (todos.every(({ done }) => done)) {
       todos.forEach((todo) => {
         todo.done = false;

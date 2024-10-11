@@ -1,7 +1,11 @@
-import { filters, setFilter } from "./todos/filter";
+import { useEffect } from "react";
+import { setFilter } from "./store/filter";
+import { filters } from "./store/filter/types";
 
 // The component to filter the todos.
 export default function Filter() {
+  useEffect(() => {});
+
   return (
     <select onChange={(e) => setFilter(e.target.value)}>
       {filters.map((f) => (

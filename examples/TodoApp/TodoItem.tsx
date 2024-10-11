@@ -1,4 +1,4 @@
-import { delTodo, toggleTodo, updateTodo, useTodo } from "./todos";
+import { delTodo, toggleTodo, updateTodo, useTodo } from "./store/todos";
 
 // The component to display a todo.
 export default function TodoItem({ id }: { id: number }) {

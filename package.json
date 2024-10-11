@@ -14,7 +14,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/immer": "./lib/immer.js",
-    "./lib/persistent": "./lib/persistent.js"
+    "./lib/persistent": "./lib/persistent.js",
+    "./lib/utils": "./lib/utils.js"
   },
   "files": [
     "./lib"
@@ -46,7 +47,8 @@
     "typescript": "^5.5.2",
     "vite": "^5.4.8",
     "vitest": "^2.1.2",
-    "wouter": "^3.3.5"
+    "wouter": "^3.3.5",
+    "zustand": "^5.0.0-rc.2"
   },
   "publishConfig": {
     "provenance": true

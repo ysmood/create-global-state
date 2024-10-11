@@ -1,6 +1,6 @@
 import Filter from "./Filter";
-import { addTodo, clearCompleted } from "./todos/actions";
-import { useZeroDone } from "./todos";
+import { addTodo, clearCompleted } from "./store/actions";
+import { useZeroDone } from "./store/todos";
 import ToggleAll from "./ToggleAll";
 
 export default function Actions() {

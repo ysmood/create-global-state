@@ -1,32 +1,45 @@
-import { SetStateAction, useRef, useSyncExternalStore } from "react";
-
-export type Equal<P> = (a: P, b: P) => boolean;
-
-export type Selector<T, P> = (val: T, serverSide: boolean) => P;
+import { useSyncExternalStore } from "react";
 
 /**
- * A hook to use the state.
+ * A function to select a part of the state to return.
  */
-export type UseStore<T> = {
+export type Selector<S, R> = (state: S, serverSide: boolean) => R;
+
+/**
+ * A React hook to use the state.
+ */
+export type UseStore<S> = {
   /**
    * @returns The current state.
    */
-  (): T;
+  (): S;
 
   /**
-   * @param selector A function to select a part of the state to return.
    * @returns The selected part of the state.
    */
-  <P>(selector: Selector<T, P>): P;
+  <R>(selector: Selector<S, R>): R;
 };
 
 /**
- * A hook to create a global state that can be used across components.
- * @param init The initial value of the state.
- * @returns A React hook to use the state, a function to update the state, and a function to get the state.
- * If you want a component to rerender when the state changes, you can use the hook.
+ * A function to produce the next state based on the previous state.
  */
-export default function create<T>(init: T) {
+export type Produce<S> = (previous: S) => S | void;
+
+/**
+ * A state or a function to get next state.
+ */
+export type NextState<S> = S | Produce<S>;
+
+/**
+ * A function to update the state. It can be used outside the React components.
+ */
+export type SetStore<S> = (nextState: NextState<S>) => void;
+
+/**
+ * Creates a global store for cross-component state management.
+ * @param init The initial value of the state.
+ */
+export default function create<S>(init: S) {
   type Listener = () => void;
   let state = init;
 
@@ -39,16 +52,16 @@ export default function create<T>(init: T) {
     };
   };
 
-  const useStore: UseStore<T> = <P>(
-    selector: Selector<T, P> = (val: T) => val as unknown as P
+  const useStore: UseStore<S> = <P>(
+    selector: Selector<S, P> = (val: S) => val as unknown as P
   ) => {
     const get = (serverSide: boolean) => () => selector(state, serverSide);
-    return useSyncExternalStore<T | P>(subscribe, get(false), get(true));
+    return useSyncExternalStore<S | P>(subscribe, get(false), get(true));
   };
 
-  const setStore = (act: SetStateAction<T>) => {
+  const setStore: SetStore<S> = (ns: NextState<S>) => {
     // update val with the new value
-    state = act instanceof Function ? act(state) : act;
+    state = producer(ns)(state) as S;
 
     // notify all listeners
     for (const listener of listeners) {
@@ -56,27 +69,13 @@ export default function create<T>(init: T) {
     }
   };
 
-  return [useStore, setStore, () => state] as const;
+  return [useStore, setStore] as const;
 }
 
 /**
- *
- * @param selector Same as the selector in useStore.
- * @param equal If equal returns true, the previous selected value will be returned,
- * else the current selected value will be returned.
+ * Converts a NextState to a Produce function.
  * @returns
  */
-export function useEqual<T, P>(
-  selector: Selector<T, P>,
-  equal: Equal<P>
-): Selector<T, P> {
-  const prev = useRef<P>();
-
-  return (val, serverSide) => {
-    const selected = selector(val, serverSide);
-    return (prev.current =
-      prev.current !== undefined && equal(prev.current, selected)
-        ? prev.current
-        : selected);
-  };
+export function producer<S>(ns: NextState<S>): Produce<S> {
+  return ns instanceof Function ? ns : () => ns;
 }
