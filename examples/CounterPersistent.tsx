@@ -1,4 +1,4 @@
-import create from "create-global-state/lib/persistent";
+import create, { saveHistory } from "create-global-state/lib/persistent";
 import { useEffect } from "react";
 import { useHashLocation } from "wouter/use-hash-location";
 
@@ -22,7 +22,11 @@ export default function CounterPersistent() {
 }
 
 function Button() {
-  return <button onClick={() => setCount((c) => c + 1, true)}>Increase</button>;
+  return (
+    <button onClick={() => setCount((c) => c + 1, { [saveHistory]: true })}>
+      Increase
+    </button>
+  );
 }
 
 function Display() {

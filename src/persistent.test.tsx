@@ -3,6 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import createPersistentStorage, {
   createLocalStorage,
   defaultKey,
+  saveHistory,
 } from "./persistent";
 
 describe("URLStorage", () => {
@@ -17,7 +18,7 @@ describe("URLStorage", () => {
   });
 
   it("basic", () => {
-    const [useVal, setVal, , getVal] = createPersistentStorage("01");
+    const [useVal, setVal] = createPersistentStorage("01");
 
     function A() {
       return <div>{useVal()}</div>;
@@ -26,7 +27,6 @@ describe("URLStorage", () => {
     render(<A />);
 
     expect(screen.getByText("01")).not.toBeNull();
-    expect(getVal()).toBe("01");
 
     cleanup();
 
@@ -58,7 +58,7 @@ describe("URLStorage", () => {
       return <div>{useVal()}</div>;
     }
 
-    setVal(() => "02", true);
+    setVal(() => "02", { [saveHistory]: true });
 
     render(<A />);
 
@@ -102,7 +102,7 @@ describe("localStorage", () => {
   });
 
   it("basic", () => {
-    const [useVal, setVal, getVal] = createLocalStorage("01");
+    const [useVal, setVal] = createLocalStorage("01");
 
     function A() {
       return <div>{useVal()}</div>;
@@ -111,7 +111,6 @@ describe("localStorage", () => {
     render(<A />);
 
     expect(screen.getByText("01")).not.toBeNull();
-    expect(getVal()).toBe("01");
 
     cleanup();
 

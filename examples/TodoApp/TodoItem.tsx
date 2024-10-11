@@ -1,24 +1,46 @@
-import { delTodo, toggleTodo, updateTodo, useTodo } from "./todos";
+import {
+  delTodo,
+  toggleTodo,
+  updateTodo,
+  useTodo,
+  useTodoDone,
+} from "./store/todos";
+
+type AttrID = { id: number };
 
 // The component to display a todo.
-export default function TodoItem({ id }: { id: number }) {
-  const { done, text } = useTodo(id);
-
+export default function TodoItem({ id }: AttrID) {
   return (
     <div className="flex gap-1 my-1">
-      <input type="checkbox" checked={done} onChange={() => toggleTodo(id)} />
-
-      <input
-        placeholder="Input text here"
-        value={text}
-        onChange={(e) => updateTodo(id, e.target.value)}
-        disabled={done}
-        autoFocus
-      />
+      <Done id={id} />
+      <Input id={id} />
 
       <button onClick={() => delTodo(id)} title="Delete current todo">
         ✕
       </button>
     </div>
+  );
+}
+
+function Done({ id }: AttrID) {
+  return (
+    <input
+      type="checkbox"
+      checked={useTodoDone(id)}
+      onChange={() => toggleTodo(id)}
+    />
+  );
+}
+
+function Input({ id }: AttrID) {
+  const { done, text } = useTodo(id);
+  return (
+    <input
+      placeholder="Input text here"
+      value={text}
+      onChange={(e) => updateTodo(id, e.target.value)}
+      disabled={done}
+      autoFocus
+    />
   );
 }

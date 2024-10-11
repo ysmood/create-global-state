@@ -1,17 +1,27 @@
 import { it, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render, screen } from "@testing-library/react";
-import createImmer from "./immer";
+import { create } from "./immer";
 
 it("immer", async () => {
-  const [useVal, setVal] = createImmer(false);
+  const [useVal, setVal] = create({ val: false });
 
   function A() {
-    return <button onClick={() => setVal(() => true)}>Click</button>;
+    return (
+      <button
+        onClick={() =>
+          setVal((s) => {
+            s.val = true;
+          })
+        }
+      >
+        Click
+      </button>
+    );
   }
 
   function B() {
-    const val = useVal();
+    const { val } = useVal();
     return <div>{val ? "OK" : ""}</div>;
   }
 
@@ -28,7 +38,7 @@ it("immer", async () => {
 });
 
 it("immer replace", async () => {
-  const [useVal, setVal] = createImmer(false);
+  const [useVal, setVal] = create(false);
 
   function A() {
     return <button onClick={() => setVal(true)}>Click</button>;

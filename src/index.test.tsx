@@ -1,11 +1,11 @@
 import { it, expect, describe } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render, screen } from "@testing-library/react";
-import create, { useEqual } from ".";
+import create from ".";
 import { renderToString } from "react-dom/server";
 
 it("create", async () => {
-  const [useVal, setVal, getVal] = create(false);
+  const [useVal, setVal] = create(false);
 
   function A() {
     return <button onClick={() => setVal(true)}>Click</button>;
@@ -26,7 +26,6 @@ it("create", async () => {
   expect(screen.queryByText("OK")).toBeNull();
   await userEvent.click(screen.getByText("Click"));
   expect(screen.getByText("OK")).not.toBeNull();
-  expect(getVal()).toBe(true);
 });
 
 it("multiple listeners", async () => {
@@ -76,29 +75,6 @@ it("selector", async () => {
   await userEvent.click(screen.getByText("Click"));
 
   expect(screen.getByText("OK")).not.toBeNull();
-});
-
-it("selector with equal", async () => {
-  const [useVal, setVal] = create({ val: "test" });
-
-  let count = 0;
-
-  function A() {
-    count++;
-    const [{ val }] = useVal(
-      useEqual(
-        (s) => [s],
-        ([a], [b]) => a.val === b.val
-      )
-    );
-    return <button onClick={() => setVal({ val: "test" })}>{val}</button>;
-  }
-
-  render(<A />);
-
-  await userEvent.click(screen.getByText("test"));
-
-  expect(count).toBe(1);
 });
 
 describe("server component", async () => {

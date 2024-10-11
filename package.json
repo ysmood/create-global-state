@@ -3,7 +3,7 @@
   "version": "0.4.1",
   "type": "module",
   "scripts": {
-    "start": "vite --open",
+    "start": "npm run build && vite --open",
     "test": "npm run build && vitest run --coverage && playwright test",
     "build": "tsc -b --clean && tsc -b",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -14,7 +14,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/immer": "./lib/immer.js",
-    "./lib/persistent": "./lib/persistent.js"
+    "./lib/persistent": "./lib/persistent.js",
+    "./lib/utils": "./lib/utils.js"
   },
   "files": [
     "./lib"
