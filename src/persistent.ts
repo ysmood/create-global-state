@@ -1,6 +1,5 @@
 import createState from ".";
-import { type Producer } from "./immer";
-import { produce } from "immer";
+import { type Producer, produce } from "./immer";
 
 export const defaultKey = "global-state";
 
@@ -14,10 +13,10 @@ export const defaultKey = "global-state";
 export default function createURLStorage<T>(init: T, key = defaultKey) {
   const storage = new URLStorage<T>(key);
   const getVal = () => storageGetter(storage, init);
-  const [useStore, setStoreBase, getStore] = createState(getVal());
+  const [useStore, baseSetStore, getStore] = createState(getVal());
 
   const setStore = (producer: Producer<T>, saveHistory: boolean = false) => {
-    setStoreBase((val) => {
+    baseSetStore((val) => {
       val = produce(val, producer);
       storage.set(val, saveHistory);
 
@@ -25,7 +24,7 @@ export default function createURLStorage<T>(init: T, key = defaultKey) {
     });
   };
 
-  const setByStorage = () => setStoreBase(getVal);
+  const setByStorage = () => baseSetStore(getVal);
 
   return [useStore, setStore, setByStorage, getStore] as const;
 }
@@ -38,12 +37,12 @@ export default function createURLStorage<T>(init: T, key = defaultKey) {
  */
 export function createLocalStorage<T>(init: T, key = defaultKey) {
   const storage = new LocalStorage<T>(key);
-  const [useStore, setStoreBase, getStore] = createState(
+  const [useStore, baseSetStore, getStore] = createState(
     storageGetter(storage, init)
   );
 
   const setStore = (producer: Producer<T>) => {
-    setStoreBase((val) => {
+    baseSetStore((val) => {
       val = produce(val, producer);
       storage.set(val);
       return val;

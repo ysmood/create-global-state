@@ -22,12 +22,13 @@ export type UseStore<T> = {
 
 /**
  * A hook to create a global state that can be used across components.
- * @param val The initial value of the state.
+ * @param init The initial value of the state.
  * @returns A React hook to use the state, a function to update the state, and a function to get the state.
  * If you want a component to rerender when the state changes, you can use the hook.
  */
-export default function create<T>(val: T) {
+export default function create<T>(init: T) {
   type Listener = () => void;
+  let state = init;
 
   const listeners = new Set<Listener>();
 
@@ -41,13 +42,13 @@ export default function create<T>(val: T) {
   const useStore: UseStore<T> = <P>(
     selector: Selector<T, P> = (val: T) => val as unknown as P
   ) => {
-    const get = (serverSide: boolean) => () => selector(val, serverSide);
+    const get = (serverSide: boolean) => () => selector(state, serverSide);
     return useSyncExternalStore<T | P>(subscribe, get(false), get(true));
   };
 
   const setStore = (act: SetStateAction<T>) => {
     // update val with the new value
-    val = act instanceof Function ? act(val) : act;
+    state = act instanceof Function ? act(state) : act;
 
     // notify all listeners
     for (const listener of listeners) {
@@ -55,7 +56,7 @@ export default function create<T>(val: T) {
     }
   };
 
-  return [useStore, setStore, () => val] as const;
+  return [useStore, setStore, () => state] as const;
 }
 
 /**
