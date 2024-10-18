@@ -1,4 +1,4 @@
-import create, { saveHistory } from "create-global-state/lib/persistent";
+import create, { saveHistory } from "stalo/lib/persistent";
 import { useEffect } from "react";
 import { useHashLocation } from "wouter/use-hash-location";
 

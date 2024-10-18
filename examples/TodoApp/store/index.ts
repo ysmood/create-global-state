@@ -1,8 +1,8 @@
-import create from "create-global-state";
-import immer from "create-global-state/lib/immer";
+import create from "stalo";
+import immer from "stalo/lib/immer";
 import { Filter, initFilter } from "./filter/types";
 import { initTodo } from "./todos/types";
-import { compose } from "create-global-state/lib/utils";
+import { compose } from "stalo/lib/utils";
 import logger from "./logger";
 
 export const initStore = {

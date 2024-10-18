@@ -1,4 +1,4 @@
-import create from "create-global-state";
+import create from "stalo";
 
 const [useCount, setCount] = create(0);
 

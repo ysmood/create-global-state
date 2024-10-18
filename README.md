@@ -11,18 +11,18 @@ All the non-core functions are just examples of how you can compose functions to
 - **Global**: The state is global, you can access it anywhere.
 - **Scalable**: Naturally scale large state into multiple modules and files without performance degradation.
 - **Middlewares**: Simple and type-safe middleware composition interface.
-- **Tiny**: About [0.3KB](https://bundlephobia.com/package/create-global-state) Minified + Gzipped.
+- **Tiny**: About [0.3KB](https://bundlephobia.com/package/stalo) Minified + Gzipped.
 
 ## Documentation
 
 ### Get started
 
 ```bash
-npm install create-global-state
+npm install stalo
 ```
 
 ```tsx
-import create from "create-global-state";
+import create from "stalo";
 
 const [useCount, setCount] = create(0);
 
@@ -47,6 +47,6 @@ Its implementation is not type safe and the return value is not intuitive. It's 
 
 > Why not [zustand](https://github.com/pmndrs/zustand)?
 
-The typescript support is not good enough, the API is not intuitive. `create-global-state` is more like `useState` which aligns with the react API style. Check the [comparison](https://github.com/ysmood/create-global-state/issues/1). Zustand [Slices Pattern](https://zustand.docs.pmnd.rs/guides/slices-pattern) can cause naming conflict issues.
-`create-global-state` can naturally scale states by modules and files.
-The setter of zustand must be called within a react component, while the setter of `create-global-state` can be called anywhere.
+The typescript support is not good enough, the API is not intuitive. `stalo` is more like `useState` which aligns with the react API style. Check the [comparison](https://github.com/ysmood/stalo/issues/1). Zustand [Slices Pattern](https://zustand.docs.pmnd.rs/guides/slices-pattern) can cause naming conflict issues.
+`stalo` can naturally scale states by modules and files.
+The setter of zustand must be called within a react component, while the setter of `stalo` can be called anywhere.

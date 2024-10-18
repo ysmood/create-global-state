@@ -1,5 +1,5 @@
 import create, { producer } from ".";
-import { compose, SetStoreX } from "./utils";
+import { compose, Middleware } from "./utils";
 import immer from "./immer";
 
 export const defaultKey = "global-state";
@@ -21,12 +21,12 @@ export function createLocalStorage<T>(init: T, key = defaultKey) {
   return [useStore, compose(setStore, immer, localStorage(storage))] as const;
 }
 
-export const saveHistory = Symbol("saveHistory");
+export const saveHistory = Symbol("save-history");
 
 export type URLStorageOptions = { [saveHistory]?: boolean };
 
-export function urlStorage<S>(storage: URLStorage<S>) {
-  return function (set: SetStoreX<S>): SetStoreX<S> {
+export function urlStorage<S>(storage: URLStorage<S>): Middleware<S> {
+  return function (set) {
     return (ns, opts?: URLStorageOptions) => {
       const produce = producer(ns);
       set((state) => {
@@ -38,8 +38,8 @@ export function urlStorage<S>(storage: URLStorage<S>) {
   };
 }
 
-export function localStorage<S>(storage: LocalStorage<S>) {
-  return function (set: SetStoreX<S>): SetStoreX<S> {
+export function localStorage<S>(storage: LocalStorage<S>): Middleware<S> {
+  return function (set) {
     return (ns, opts) => {
       const produce = producer(ns);
       set((state) => {

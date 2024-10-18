@@ -1,5 +1,5 @@
 {
-  "name": "create-global-state",
+  "name": "stalo",
   "version": "0.5.0",
   "type": "module",
   "scripts": {
@@ -25,7 +25,7 @@
     "react": ">=18.0.0"
   },
   "repository": {
-    "url": "https://github.com/ysmood/create-global-state"
+    "url": "https://github.com/ysmood/stalo"
   },
   "devDependencies": {
     "@playwright/test": "^1.47.2",
@@ -51,5 +51,8 @@
   },
   "publishConfig": {
     "provenance": true
-  }
+  },
+  "workspaces": [
+    "packages/devtools"
+  ]
 }

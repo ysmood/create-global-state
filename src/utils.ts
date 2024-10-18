@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { NextState, type Selector } from ".";
+import { SetStore, type Selector } from ".";
 
 export type Equal<R> = (a: R, b: R) => boolean;
 
@@ -26,21 +26,15 @@ export function useEqual<S, R>(
 }
 
 /**
- * A function to update the state with options.
- */
-
-export type SetStoreX<S> = (nextState: NextState<S>, options?: object) => void;
-
-/**
  * A middleware to update the state with options.
  */
-export type Middleware<S> = (set: SetStoreX<S>) => SetStoreX<S>;
+export type Middleware<S> = (set: SetStore<S>) => SetStore<S>;
 
 /**
  * Composes multiple middlewares.
  */
 export function compose<S>(
-  setStore: SetStoreX<S>,
+  setStore: SetStore<S>,
   ...middlewares: Middleware<S>[]
 ) {
   return middlewares.reduceRight((s, middleware) => middleware(s), setStore);

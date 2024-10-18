@@ -1,8 +1,7 @@
-import { producer } from "create-global-state";
-import { SetStoreX } from "create-global-state/lib/utils";
+import { producer, SetStore } from "stalo";
 
 // Create a custom middleware to log all the state changes.
-export default function logger<S>(set: SetStoreX<S>): SetStoreX<S> {
+export default function logger<S>(set: SetStore<S>): SetStore<S> {
   return (ns, opts) => {
     set((from) => {
       const to = producer(ns)(from);

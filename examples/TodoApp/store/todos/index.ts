@@ -1,7 +1,7 @@
 import { setStore, Store, useStore } from "..";
 import { numbersEqual } from "./utils";
 import { Filter } from "../filter/types";
-import { useEqual } from "create-global-state/lib/utils";
+import { useEqual } from "stalo/lib/utils";
 
 // Get a todo by id.
 export function useTodo(id: number) {

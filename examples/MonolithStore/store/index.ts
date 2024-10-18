@@ -1,6 +1,6 @@
 // Here we use Immer to update the store immutably, Immer is optional,
 // you can use vanilla js or other libs to update the store.
-import { create } from "create-global-state/lib/immer";
+import { create } from "stalo/lib/immer";
 
 // Define the monolith store for the entire web app.
 // It contains a list of counters and a title string.

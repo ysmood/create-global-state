@@ -33,7 +33,7 @@ export type NextState<S> = S | Produce<S>;
 /**
  * A function to update the state. It can be used outside the React components.
  */
-export type SetStore<S> = (nextState: NextState<S>) => void;
+export type SetStore<S> = (nextState: NextState<S>, options?: object) => void;
 
 /**
  * Creates a global store for cross-component state management.

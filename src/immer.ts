@@ -1,6 +1,6 @@
-import createState, { producer, NextState } from ".";
+import createState, { producer, NextState, SetStore } from ".";
 import { produce } from "immer";
-import { compose, SetStoreX } from "./utils";
+import { compose } from "./utils";
 
 /**
  * It's similar to the base create function, but it uses Immer to update the state immutably.
@@ -10,7 +10,7 @@ export function create<S>(init: S) {
   return [useStore, compose(setStore, immer)] as const;
 }
 
-export default function immer<S>(set: SetStoreX<S>) {
+export default function immer<S>(set: SetStore<S>) {
   return (ns: NextState<S>, opts?: object) =>
     set((s) => produce(s, producer(ns)), opts);
 }
